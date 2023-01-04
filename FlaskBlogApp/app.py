@@ -51,7 +51,6 @@ def register():
         email = form.email.data
         username = form.username.data 
         password = sha256_crypt.hash(str(form.password.data))
-        print(name, email, username, password)
         # Creates cursor
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO users(name, email, username, password) VALUES(%s, %s, %s, %s)", (name, email, username, password)) 
@@ -63,6 +62,19 @@ def register():
         
         redirect(url_for('index'))
     return render_template('register.html', form=form)
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+@app.route("/sidebar")
+def sider():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT id_menu, menu FROM menu;")
+    print(dir(cur))
+    menus = cur.fetchall()
+    print(menus)
+    return render_template("sidebar.html", menus=menus)
 
 if __name__ == '__main__':
     app.secret_key = 'Secret145'
